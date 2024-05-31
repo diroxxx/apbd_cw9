@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using webApp.Data;
+using webApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IClientTripRepository, ClientTripRepository>();
+
 builder.Services.AddDbContext<ApbdContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
@@ -19,8 +22,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-
 // app.UseAuthorization(); // Ensure authorization middleware is added
 app.UseHttpsRedirection();
 app.MapControllers();
