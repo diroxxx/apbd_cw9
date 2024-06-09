@@ -14,8 +14,6 @@ public class ClientTripRepository: IClientTripRepository
     public ClientTripRepository(ApbdContext context)
     {
         _context = context;
-        
-       
     }
 
 
@@ -84,16 +82,29 @@ public class ClientTripRepository: IClientTripRepository
 
     public async Task<bool> IsClientExistWithGivenPesel(string pesel)
     {
-        var client =await  _context.Clients.AnyAsync(i => i.Pesel == pesel);
-        return client;
-
+        return await _context.Clients.AnyAsync(i => i.Pesel == pesel);
     }
+
 
     public async Task<bool> IsClientExistWithGivenPeselInTrips(string pesel)
     {
         var client = _context.Clients.FirstOrDefaultAsync(i => i.Pesel == pesel);
+       Console.WriteLine(client);
+        if (client == null)
+        {
+            return false;
+        }
 
         var clientInTrips = await _context.ClientTrips.AnyAsync(i => i.IdClient == client.Id);
+        if (clientInTrips)
+        {
+            Console.WriteLine("Client with given PESEL has trips.");
+        }
+        else
+        {
+            Console.WriteLine("Client with given PESEL has no trips.");
+        }
+        
         return clientInTrips;
     }
 
